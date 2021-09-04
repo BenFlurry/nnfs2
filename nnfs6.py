@@ -73,5 +73,5 @@ activation2.forward(dense2.output)
 print(activation2.output[:5])
 
 ''' 
-since initialisation was random with random data, we get a near perfect distribution of 1/3 for each value
+since initialisation was random with random data, we get a near perfect distribution of 1/3 for each value.
 '''
