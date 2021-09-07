@@ -52,6 +52,9 @@ class Activation_Softmax:
         self.output = prob_values
 
 
+
+
+
 # initialise data / obj classes
 X, y = create_data(100, 3)
 # 1st layer has to have 2 inputs, since data only 2 inputs
@@ -71,6 +74,4 @@ activation2.forward(dense2.output)
 # print first 5 outputs
 print(activation2.output[:5])
 
-''' 
-since initialisation was random with random data, we get a near perfect distribution of 1/3 for each value.
-'''
+
