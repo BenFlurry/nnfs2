@@ -52,7 +52,29 @@ class Activation_Softmax:
         self.output = prob_values
 
 
+class Loss:
+    # output from model, y -> intended target values
+    def calculate(self, output, y):
+        sample_losses = self.forward(output, y)
+        data_loss = np.mean(sample_losses)
 
+
+# loss function inheriting from loss
+class Loss_CategoricalCrossEntropy(Loss):
+    def forward(self, y_prediction, y_true):
+        # find number of samples
+        samples = len(y_prediction)
+        # clip values so not to infinity
+        y_prediction_clipped = np.clip(y_prediction, 1e-7, 1 - 1e-7)
+        # 1d array of target value
+        if len(y_true.shape) == 1:
+            correct_confidences = y_prediction_clipped[range(samples), y_true]
+        # 1 hot encoded vectors
+        elif len(y_true.shape) == 2:
+            # multiple the hot coded vector and the prediction vector and sum across each sample
+            correct_confidences = np.sum(y_prediction * y_true, axis=1)
+        negative_log_likelihoods = -np.log(correct_confidences)
+        return negative_log_likelihoods
 
 
 # initialise data / obj classes
@@ -74,4 +96,8 @@ activation2.forward(dense2.output)
 # print first 5 outputs
 print(activation2.output[:5])
 
-
+# calculate loss
+## NOT WORKING
+loss_function = Loss_CategoricalCrossEntropy()
+loss = loss_function.calculate(activation2.output, y)
+print(loss)

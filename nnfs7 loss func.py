@@ -14,15 +14,24 @@ loss1 = -(np.log(softmax_output1[0]) * target_output1[0] +
 print(loss1)
 
 # function represented using numpy arrays, so we can calculate loss for batches
-softmax_output2 = np.array([[0.1, 0.1, 0.2],
+softmax_output2 = np.array([[0, 0.1, 0.2],
                             [0.1, 0.5, 0.4],
                             [0.02, 0.9, 0.08]])
 
 # going down the batches, target index is 0, then 1, then 1
 class_targets2 = [0, 1, 1]
 
+'''
+1 hot encoded class_targets2 would look like:
+[[1,0,0],
+ [0,1,0],
+ [0,1,0]]
+'''
+
 # softmax function returning vector of each loss per batch
 # issue with log(0) = infinity -> use np.clip
 loss2 = -np.log(softmax_output2[range(len(softmax_output2)), class_targets2])
+# clip the loss so that there are no infinite returned values
+clipped_loss = np.clip(loss2, 1e-7, 1-1e-7)
 # find average of the losses from each batch
 batch_loss = np.mean(loss2)
