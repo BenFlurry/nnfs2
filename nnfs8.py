@@ -79,15 +79,13 @@ class Loss_CategoricalCrossEntropy(Loss):
 
 
 # finding accuracy using argmax inheriting from loss
-## COMPLETE USING ARGMAX FUNCTION
 class Accuracy_ArgMax(Loss):
     def forward(self, y_prediction, y_true):
-        # find number of samples
-        samples = len(y_prediction)
-        # clip values so not to infinity
-        y_prediction_clipped = np.clip(y_prediction, 1e-7, 1 - 1e-7)
         if len(y_true.shape) == 2:
-            pass
+            y_prediction = np.argmax(y_true == 1, axis=1)
+        predictions = np.argmax(y_prediction, axis=1)
+        y_accuracy = np.mean(predictions == y_true)
+        return y_accuracy
 
 
 # initialise data / obj classes
@@ -111,3 +109,7 @@ print(activation2.output[:5])
 loss_function = Loss_CategoricalCrossEntropy()
 loss = loss_function.calculate(activation2.output, y)
 print(loss)
+
+accuracy_function = Accuracy_ArgMax()
+accuracy = accuracy_function.calculate(activation2.output, y)
+print(accuracy)
