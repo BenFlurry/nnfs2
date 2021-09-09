@@ -57,6 +57,7 @@ class Loss:
     def calculate(self, output, y):
         sample_losses = self.forward(output, y)
         data_loss = np.mean(sample_losses)
+        return data_loss
 
 
 # loss function inheriting from loss
@@ -77,19 +78,29 @@ class Loss_CategoricalCrossEntropy(Loss):
         return negative_log_likelihoods
 
 
+# finding accuracy using argmax inheriting from loss
+## COMPLETE USING ARGMAX FUNCTION
+class Accuracy_ArgMax(Loss):
+    def forward(self, y_prediction, y_true):
+        # find number of samples
+        samples = len(y_prediction)
+        # clip values so not to infinity
+        y_prediction_clipped = np.clip(y_prediction, 1e-7, 1 - 1e-7)
+        if len(y_true.shape) == 2:
+            pass
+
+
 # initialise data / obj classes
 X, y = create_data(100, 3)
 # 1st layer has to have 2 inputs, since data only 2 inputs
 dense1 = Layer_Dense(2, 3)
 activation1 = Activation_ReLU()
-
 dense2 = Layer_Dense(3, 3)
 activation2 = Activation_Softmax()
 
 # create nn
 dense1.forward(X)
 activation1.forward(dense1.output)
-
 dense2.forward(activation1.output)
 activation2.forward(dense2.output)
 
@@ -97,7 +108,6 @@ activation2.forward(dense2.output)
 print(activation2.output[:5])
 
 # calculate loss
-## NOT WORKING
 loss_function = Loss_CategoricalCrossEntropy()
 loss = loss_function.calculate(activation2.output, y)
 print(loss)
