@@ -94,3 +94,5 @@ z = xw0 + xw1 + xw2 + b
 y = max(z, 0)
 print(y)
 
+
+# NUMPY VERSION

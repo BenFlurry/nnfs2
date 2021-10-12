@@ -28,12 +28,31 @@ class LayerDense:
     # calculates the output of the layer dot product the inputs and weights, add biases
     def forward(self, inputs):
         self.output = np.dot(inputs, self.weights) + self.biases
+        self.inputs = inputs
+
+    # takes in derivative of last layer
+    def backward(self, dvalues):
+        # chain rule for weights is inputs of the layer (transposed so we can dot) * dvalues
+        self.dweights = np.dot(self.inputs.T, dvalues)
+        # chain rule for inputs is the dvalues . weights
+        self.dinputs = np.dot(dvalues, self.weights.T)
+        # derivative of biases is just the sum of the previous layer derivatives
+        self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
 
 
 # ReLU activation function if x <=0, return 0 else return x
 class ActivationReLU:
     def forward(self, inputs):
         self.output = np.maximum(0, inputs)
+        # remember the input values for when we backprop
+        self.inputs = inputs
+
+    # take in the derivatives from the layer infront
+    def backwards(self, dvalues):
+        # make a copy of the variable so we dont edit the original
+        self.dinputs = dvalues.copy()
+        # derivative of relu is 1 for x >= 1 and 0 for x < 0, so dvalues * drelu:
+        self.dinputs[self.inputs <= 0] = 0
 
 
 # softmax activation function for output layer
