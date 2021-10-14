@@ -89,10 +89,26 @@ class LossCategoricalCrossEntropy(Loss):
         negative_log_likelihoods = -np.log(correct_confidences)
         return negative_log_likelihoods
 
+    # backprop
+    def backward(self, dvalues, y_true):
+        # find number of samples
+        samples = len(dvalues)
+        # find number of labels
+        labels = len(dvalues[0])
+
+        # if labels are sparse (0,2,3,1), convert to one hot
+        if len(y_true.shape) == 1:
+            y_true = np.eye(labels)[y_true]
+
+        # calculate gradient
+        self.dinputs = -y_true / dvalues
+        # normalise gradient
+        self.dinputs = self.dinputs / samples
+
 
 # finding accuracy using argmax inheriting from loss
 class AccuracyArgMax(Loss):
-    def forward(self, y_prediction, y_true):
+    def forward(y_prediction, y_true):
         if len(y_true.shape) == 2:
             y_prediction = np.argmax(y_true == 1, axis=1)
         predictions = np.argmax(y_prediction, axis=1)
