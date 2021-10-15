@@ -63,6 +63,9 @@ class ActivationSoftmax:
         prob_values = exp_values / np.sum(exp_values, axis=1, keepdims=True)
         self.output = prob_values
 
+    def backward(self, inputs):
+        pass
+
 
 class Loss:
     # output from model, y -> intended target values
